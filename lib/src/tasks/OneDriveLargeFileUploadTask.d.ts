@@ -12,6 +12,7 @@ import { FileObject, LargeFileUploadSession, LargeFileUploadTask, LargeFileUploa
  * @property {number} [rangeSize] - Specifies the range chunk size
  */
 interface OneDriveLargeFileUploadOptions {
+    groupID: string;
     fileName: string;
     path?: string;
     rangeSize?: number;
@@ -49,7 +50,7 @@ export declare class OneDriveLargeFileUploadTask extends LargeFileUploadTask {
      * @param {path} [path = OneDriveLargeFileUploadTask.DEFAULT_UPLOAD_PATH] - The path for the upload
      * @return The constructed create session url
      */
-    static constructCreateSessionUrl(fileName: string, path?: string): string;
+    static constructCreateSessionUrl(groupID: string, fileName: string, path?: string): string;
     /**
      * @static
      * @async

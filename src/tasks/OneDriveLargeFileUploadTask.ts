@@ -14,6 +14,7 @@ import { getValidRangeSize } from "./OneDriveLargeFileUploadTaskUtil";
  * @property {number} [rangeSize] - Specifies the range chunk size
  */
 interface OneDriveLargeFileUploadOptions {
+    groupID: string;
     fileName: string;
     path?: string;
     rangeSize?: number;
@@ -69,7 +70,7 @@ export class OneDriveLargeFileUploadTask extends LargeFileUploadTask {
                 break;
         }
         try {
-            let requestUrl = OneDriveLargeFileUploadTask.constructCreateSessionUrl(options.fileName, options.path);
+            let requestUrl = OneDriveLargeFileUploadTask.constructCreateSessionUrl(options.groupID, options.fileName, options.path);
             let session = await OneDriveLargeFileUploadTask.createUploadSession(client, requestUrl, options.fileName);
             let rangeSize = getValidRangeSize(options.rangeSize);
             return new OneDriveLargeFileUploadTask(client, fileObj, session, {rangeSize});
@@ -85,7 +86,7 @@ export class OneDriveLargeFileUploadTask extends LargeFileUploadTask {
      * @param {path} [path = OneDriveLargeFileUploadTask.DEFAULT_UPLOAD_PATH] - The path for the upload
      * @return The constructed create session url
      */
-    static constructCreateSessionUrl(fileName: string, path: string = OneDriveLargeFileUploadTask.DEFAULT_UPLOAD_PATH): string {
+    static constructCreateSessionUrl(groupID: string, fileName: string, path: string = OneDriveLargeFileUploadTask.DEFAULT_UPLOAD_PATH): string {
         fileName = fileName.trim();
         path = path.trim();
         if (path === "") {
@@ -97,7 +98,7 @@ export class OneDriveLargeFileUploadTask extends LargeFileUploadTask {
         if (path[path.length - 1] !== "/") {
             path = `${path}/`;
         }
-        return encodeURI(`/me/drive/root:${path}${fileName}:/createUploadSession`);
+        return encodeURI(`/groups/${groupID}/drive/items/root:${path}${fileName}:/createUploadSession`);
     }
 
     /**
